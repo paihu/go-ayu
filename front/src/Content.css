@@ -1,0 +1,13 @@
+table {
+  border-width: 1px;
+  border-style: outset;
+}
+
+table th {
+  color: #f00;
+}
+table th,
+table td {
+  border-width: 1px;
+  border-style: outset;
+}

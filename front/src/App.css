@@ -1,0 +1,27 @@
+.App {
+  height: 100%;
+}
+
+ul {
+  list-style: square;
+}
+ul ul {
+  list-style: circle;
+}
+.message-area {
+  height: calc(1.3em * 5);
+  line-height: 1.3;
+  width: calc(1.3em * 30);
+}
+a {
+  text-decoration: underline;
+}
+a:link {
+  color: #ffbbbb;
+}
+a:visited {
+  color: #bbbbff;
+}
+a:hover {
+  color: #ff0000;
+}

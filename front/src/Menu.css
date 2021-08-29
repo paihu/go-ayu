@@ -1,0 +1,16 @@
+nav ul {
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  list-style: none;
+  display: inline-block;
+  margin: 0 10px;
+}
+nav ul li:before {
+  content: "[ ";
+}
+nav ul li:after {
+  content: " ]";
+}

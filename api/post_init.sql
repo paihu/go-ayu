@@ -1,0 +1,18 @@
+CREATE TABLE IF NOT EXISTS post(
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+user TEXT NOT NULL,
+email TEXT NOT NULL,
+title TEXT NOT NULL,
+comment TEXT NOT NULL,
+delete_password TEXT NOT NULL,
+url TEXT NOT NULL,
+kind TEXT NOT NULL,
+uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+`count` INTEGER DEFAULT 0,
+limit_count INTEGER DEFAULT 0,
+require_message BOOLEAN DEFAULT f,
+limit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+salt  TEXT DEFAULT (cast(random() AS TEXT))
+);
+
+CREATE INDEX index_post_upload ON post(uploaded_at DESC);

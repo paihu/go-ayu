@@ -1,0 +1,13 @@
+.post {
+  background-color: #fff;
+  color: #000;
+  width: max(20em, 50%);
+  white-space: pre-wrap;
+}
+.user {
+  font-weight: bold;
+  color: #f00;
+}
+.message {
+  white-space: pre-wrap;
+}
