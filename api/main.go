@@ -66,15 +66,16 @@ func main() {
 	api.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins:     []string{"http://localhost:3000", "http://localhost:8080"},
 		AllowCredentials: true,
-		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowCredentials},
+		AllowHeaders:     []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAccessControlAllowCredentials, echo.HeaderAuthorization},
 		AllowMethods:     []string{http.MethodGet, http.MethodHead, http.MethodPut, http.MethodPatch, http.MethodPost, http.MethodDelete},
 	}))
 
 	apis := api.Group("/api")
 	api.GET("/", h.hello)
 	apis.GET("/post/page/:page", h.getPosts)
-	apis.GET("/post/:id", h.getPost)
 	apis.POST("/post", h.addPost)
+	apis.GET("/post/:id", h.getPost)
+	apis.DELETE("/post/:id", h.deletePost)
 	apis.GET("/post/counts", h.getPostCounts)
 
 	apis.GET("/post/:id/message", h.getMessages)
@@ -95,6 +96,9 @@ type getPostsProps struct {
 }
 
 type getMessagesProps struct {
+	Id int64 `param:"id" json:"id"`
+}
+type deletePostProps struct {
 	Id int64 `param:"id" json:"id"`
 }
 
@@ -239,4 +243,28 @@ func (h *handler) addPost(c echo.Context) error {
 func (h *handler) getPostCounts(c echo.Context) error {
 	count := h.postService.GetCounts()
 	return c.JSON(http.StatusOK, map[string]int{"count": count})
+}
+
+func (h *handler) deletePost(c echo.Context) error {
+	fmt.Println("delete post")
+	var props deletePostProps
+	if err := c.Bind(&props); err != nil {
+		fmt.Println(err)
+		return c.String(http.StatusNotFound, "parameter error")
+	}
+	p := Post{Id: props.Id}
+	p, err := h.postService.Get(p)
+	if err != nil {
+		return c.String(http.StatusNoContent, "post not found")
+	}
+	password := c.Request().Header.Get(echo.HeaderAuthorization)
+	if password != p.DeletePassword {
+		return c.String(http.StatusUnauthorized, "password mismatch")
+	}
+	if err := h.postService.Delete(p); err != nil {
+		return c.String(http.StatusNoContent, "post not found")
+	}
+
+	return c.String(http.StatusOK, "deleted")
+
 }

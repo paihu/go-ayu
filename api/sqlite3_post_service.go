@@ -11,7 +11,8 @@ type Sqlite3PostService struct {
 }
 
 func (s Sqlite3PostService) Delete(p Post) error {
-	_, err := s.DB.Exec("delete from post where post_id = ? ", p.Id)
+	fmt.Println("delete", p.Id)
+	_, err := s.DB.Exec("delete from post where id = ? ", p.Id)
 	return err
 }
 func (s Sqlite3PostService) Add(p Post) (Post, error) {

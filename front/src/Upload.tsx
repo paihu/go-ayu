@@ -37,7 +37,7 @@ const Upload: React.FC<{}> = () => {
       }
       toast("upload finish");
       //alert("upload finish")
-      history.push("/");
+      history.push(`/post/${message_resp.data.id}`);
 
     };
   return (
