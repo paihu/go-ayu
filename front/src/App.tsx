@@ -6,10 +6,13 @@ import PostPage from "./PostPage";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Title } from "./const";
 import Upload from "./Upload";
+import {ToastContainer} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.min.css';
 
 const App: React.FC<{}> = () => {
   return (
     <Router>
+      <ToastContainer/>
       <Switch>
         <Route exact path="/">
           <div className="App">

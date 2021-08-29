@@ -20,7 +20,7 @@ func (s Sqlite3MessageService) Add(m Message) (Message, error) {
 }
 
 func (s Sqlite3MessageService) Gets(p Post) (m []Message, err error) {
-	err = s.DB.Select(&m, "select * from message where post_id = ? order by inserted_at desc", p.Id)
+	err = s.DB.Select(&m, "select * from message where post_id = ? order by inserted_at asc", p.Id)
 	return
 }
 

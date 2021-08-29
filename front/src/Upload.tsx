@@ -1,9 +1,9 @@
 import axios, { AxiosError } from "axios";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory} from "react-router-dom";
 import { baseUrl, Title } from "./const";
 import { Post } from "./Post";
-
+import {toast} from 'react-toastify';
 const client = axios.create({ withCredentials: true, timeout: 1000 });
 
 const initialPost: Post = {
@@ -16,6 +16,7 @@ const initialPost: Post = {
 };
 
 const Upload: React.FC<{}> = () => {
+  const history = useHistory();
   const [post, cahngePost] = useState(initialPost);
   const submit_post: (e: React.MouseEvent<HTMLInputElement>) => Promise<void> =
     async (e) => {
@@ -34,6 +35,10 @@ const Upload: React.FC<{}> = () => {
       if (message_resp === undefined) {
         return;
       }
+      toast("upload finish");
+      //alert("upload finish")
+      history.push("/");
+
     };
   return (
     <>
@@ -62,7 +67,7 @@ const Upload: React.FC<{}> = () => {
             コメント
             <br />
             <textarea
-              cols={5}
+              className="message-area"
               onChange={(e) => cahngePost({ ...post, comment: e.target.value })}
             ></textarea>
           </li>

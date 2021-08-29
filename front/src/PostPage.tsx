@@ -8,6 +8,20 @@ import { baseUrl } from "./const";
 
 const client = axios.create({ withCredentials: true, timeout: 1000 });
 
+const isAlllowShow: (p: Post) => boolean = (p: Post) => {
+  if (p.limit_count && p.limit_count >= p.count) {
+    return false
+  }
+  if(p.limit_date){
+    const t = new Date();
+    t.setTime(Date.parse(p.limit_date))
+    if(t < new Date()){
+      return false
+    }
+  }
+  return true
+}
+
 const PostPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const parsed_id = parseInt(id);
@@ -20,7 +34,6 @@ const PostPage: React.FC = () => {
     count: 0,
   };
 
-  const initialMessages: Message[] = [];
   const initialPostMessage: Message & { view: string } = {
     post_id: parsed_id,
     user: "",
@@ -30,13 +43,13 @@ const PostPage: React.FC = () => {
   };
 
   const [post, setPost] = useState(initialPost);
-  const [messages, setMessages] = useState(initialMessages);
+  const [messages, setMessages] = useState([] as  Message[]);
   const [post_message, setPostMessage] = useState(initialPostMessage);
   const [url, seturl] = useState("");
 
   useEffect(() => {
     console.log("run useEffect");
-    const f = async () => {
+    const p = async () => {
       console.log("start async get");
       const resp = await client
         .get(`${baseUrl}/api/post/${parsed_id}`)
@@ -53,7 +66,22 @@ const PostPage: React.FC = () => {
           : console.log("require message");
       }
     };
-    f();
+    p();
+    const m = async () => {
+      console.log("start async get");
+      const resp = await client
+        .get(`${baseUrl}/api/post/${parsed_id}/message`)
+        .catch((e: AxiosError<Response>) => {
+          console.log(e);
+          console.log(e.response);
+        });
+      console.log("end async get");
+      console.log(resp);
+      if (resp) {
+          setMessages(resp.data as Message[] || [] as Message[])
+      }
+    };
+    m();
     console.log("finish use effect");
   }, [parsed_id]);
 
@@ -110,7 +138,7 @@ const PostPage: React.FC = () => {
       {messages.map((message) => (
         <>
           <hr />
-          <div className="message">
+          <div className="message" key={message.inserted_at}>
             <span className="user">{message.user}</span>[
             <a href={`mailto:${message.email}`}>E-mail</a>]{" "}
             {message.inserted_at}
@@ -151,6 +179,8 @@ const PostPage: React.FC = () => {
               }
             ></input>
           </li>
+          {
+            isAlllowShow(post) ? (
           <li>
             URL表示
             <br />
@@ -169,7 +199,8 @@ const PostPage: React.FC = () => {
             ></input>
             ここをチェックすることで提供品URLが表示されます。
           </li>
-          ;
+            ) : ""
+          }
           <li>
             発言(エラー時再送信禁止)
             <br />

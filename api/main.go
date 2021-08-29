@@ -118,8 +118,10 @@ func (h *handler) addMessage(c echo.Context) error {
 
 	if p.LimitCount == 0 || p.LimitCount > p.Count {
 		hash := sha512.Sum512([]byte(fmt.Sprintf("%s%d", p.Salt, r.Id)))
-		c.SetCookie(&http.Cookie{Name: fmt.Sprintf("post.%d", r.PostId),
-			Value: base64.StdEncoding.EncodeToString(hash[:])})
+		c.SetCookie(&http.Cookie{
+			Name:  fmt.Sprintf("post.%d", r.PostId),
+			Value: base64.StdEncoding.EncodeToString(hash[:]),
+		})
 		h.postService.CountIngrement(p)
 	}
 	return c.JSON(http.StatusCreated, r)

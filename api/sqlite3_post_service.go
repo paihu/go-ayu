@@ -76,7 +76,7 @@ func (s Sqlite3PostService) CountIngrement(p Post) (r Post, err error) {
 	return
 }
 func (s Sqlite3PostService) Gets(page int) (posts []Post, err error) {
-	err = s.DB.Select(&posts, "select * from post order by uploaded_at limit 30 offset ?", page*30)
+	err = s.DB.Select(&posts, "select * from post order by uploaded_at desc limit 30 offset ?", page*30)
 	fmt.Println(posts)
 	return
 }

@@ -11,11 +11,35 @@ interface ContentProps {
   page: number;
 }
 
-const delete_post: (p: Post) => () => void = (post: Post) => {
-  return () => {
-    console.log(post.id);
-  };
-};
+type generateTopicStringProps = {
+  count?: number,
+  limit_count?: number,
+  limit_date?: string,
+  require_message?: boolean,
+}
+
+const generateTopicString: (g: generateTopicStringProps) =>  string = (g: generateTopicStringProps)=> {
+  if (g.limit_count && g.count && g.limit_count !==0 && g.limit_count <= g.count){
+    return "提供終了"
+  }
+  if (g.limit_date){
+  const t = new Date();
+  t.setTime(Date.parse(g.limit_date));
+  if (t < new Date()){
+    return "提供終了"
+  }
+}
+  let s = "";
+  if (g.limit_count && g.limit_count !==0){
+    s += `あと${g.limit_count - (g.count||0)}人`
+  }
+  if(g.require_message){
+    if (s.length !== 0 ) s += " "
+    s += "要書込"
+  }
+  return s
+}
+
 const parseDate: (s: string) => string = (s: string) => {
   const t = new Date();
   t.setTime(Date.parse(s));
@@ -55,8 +79,8 @@ const Content: React.FC<ContentProps> = ({ page }) => {
         </thead>
         <tbody>
           {posts.map((post) => (
-            <tr>
-              <td onClick={delete_post(post)}>
+            <tr key={`post-${post.id}`}>
+              <td>
                 <input type="checkbox" name={`${post.id}`} value="1" />
               </td>
               <td>{parseDate(post.uploaded_at!)}</td>
@@ -67,10 +91,7 @@ const Content: React.FC<ContentProps> = ({ page }) => {
               <td>{post.kind}</td>
               <td>{post.count ? post.count : 0}</td>
               <td>
-                {post.limit_count
-                  ? `あと${post.limit_count - (post.count ? post.count : 0)}人 `
-                  : ""}
-                {post.require_message ? "要書込 " : ""}
+                {generateTopicString({count: post.count,limit_count: post.limit_count,limit_date: post.limit_date,require_message: post.require_message})}
               </td>
             </tr>
           ))}
