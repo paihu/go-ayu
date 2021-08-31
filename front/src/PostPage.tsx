@@ -19,6 +19,9 @@ const isAlllowShow: (p: Post) => boolean = (p: Post) => {
       return false
     }
   }
+  if(!p.require_message){
+    return false
+  }
   return true
 }
 
