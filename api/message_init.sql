@@ -1,9 +1,9 @@
 CREATE TABLE IF NOT EXISTS message(
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-post_id INTEGER REFERENCES post(id) ON DELETE CASCADE,
-user TEXT,
-email TEXT,
-message TEXT,
+post_id INTEGER NOT NULL REFERENCES post(id) ON DELETE CASCADE,
+user TEXT NOT NULL,
+email TEXT NOT NULL,
+message TEXT NOT NULL,
 inserted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 CREATE INDEX index_message_post_id_inserted ON message(post_id,inserted_at DESC);

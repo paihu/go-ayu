@@ -49,9 +49,10 @@ func initDB(db *sqlx.DB) error {
 func main() {
 
 	api := echo.New()
-	db, _ := sqlx.Open("sqlite3", ":memory:")
+	db, _ := sqlx.Open("sqlite3", ":memory:?_busy_timeout=5000")
 	defer db.Close()
 	db.SetMaxOpenConns(1)
+	db.MustExec("PRAGMA foreign_keys = ON")
 	if err := initDB(db); err != nil {
 		panic(err)
 	}
