@@ -34,6 +34,7 @@ func TestAddPostWithInvalidUrl(t *testing.T) {
 		User:           "hoge",
 		Email:          "hoge@hoge.com",
 		Title:          "title",
+		Comment:        "comment",
 		DeletePassword: "fuga",
 		Url:            "https://localhost/hoge.zip",
 		Kind:           "other",
@@ -61,6 +62,7 @@ func TestAddPostWithInvalidEmail(t *testing.T) {
 		User:           "hoge",
 		Email:          "hoge.hoge.com",
 		Title:          "title",
+		Comment:        "comment",
 		DeletePassword: "fuga",
 		Url:            "https://localhost.com/hoge.zip",
 		Kind:           "other",
@@ -88,6 +90,7 @@ func TestAddPost(t *testing.T) {
 		User:           "hoge",
 		Email:          "hoge@hoge.com",
 		Title:          "title",
+		Comment:        "comment",
 		DeletePassword: "fuga",
 		Url:            "https://localhost.com/hoge.zip",
 		Kind:           "other",
@@ -113,6 +116,8 @@ func TestAddPost(t *testing.T) {
 	}
 
 	// check inster data
+	// omit delete_password
+	p.DeletePassword = ""
 	j, _ = json.Marshal(p)
 	req = httptest.NewRequest("GET", fmt.Sprintf("/post/%d", p.Id), nil)
 	rec = httptest.NewRecorder()

@@ -30,7 +30,6 @@ func initDB(db *sqlx.DB) error {
 		return err
 	}
 
-	_, err = db.Exec("insert into post(user,email,title,kind,delete_password,url,comment) values('hoge','hoge@hoge.com','hogehoge','others','hoge','http://localhost/hoge','comments')")
 	if err != nil {
 		return err
 	}
@@ -198,7 +197,6 @@ func (h *handler) getPost(c echo.Context) error {
 	if r, err := h.postService.CountIngrement(r); err != nil {
 		fmt.Println(r, err)
 	}
-	fmt.Println("return ok", r)
 	return c.JSON(http.StatusOK, r)
 }
 
@@ -246,7 +244,6 @@ func (h *handler) getPostCounts(c echo.Context) error {
 }
 
 func (h *handler) deletePost(c echo.Context) error {
-	fmt.Println("delete post")
 	var props deletePostProps
 	if err := c.Bind(&props); err != nil {
 		fmt.Println(err)
